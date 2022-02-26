@@ -217,6 +217,10 @@
             constructor(props) {
                 super(props);
                 this.md = new Remarkable();
+                this.md.set({
+                 html: true,
+                 breaks: true
+                });
                 this.handleChange = this.handleChange.bind(this);
                 this.state = { value: 'Hello, **world**!' };
             }
@@ -226,7 +230,7 @@
             }
 
             getRawMarkup() {
-                return { __html: this.md.render(this.state.value) };
+                return { __html: this.md.render(this.state.value)};
             }
 
             render() {
