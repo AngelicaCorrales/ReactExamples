@@ -17,7 +17,7 @@
     <div id="timer-example"></div>
     <div id="todos-example"></div>
     <div id="markdown-example"></div>
-   
+    <div id="timer-example2"></div>
     <script type="text/babel">
 
         ReactDOM.render(
@@ -84,12 +84,62 @@
 
                 ReactDOM.render(React.createElement(Timer, null), document.getElementById('timer-example'));
     
+            class Timer2 extends React.Component {
+                constructor(props) {
+                    super(props);
+                    this.state = { seconds: 0 , minutes: 0, hours: 0 };
+                }
+
+                tick() {
+                    this.setState(state => ({
+                    seconds: state.seconds + 1
+                    }));
+                    this.setTime();
+                    this.setState(state => ({
+                    seconds: state.seconds,
+                    minutes: state.minutes,
+                    hours: state.hours    
+                    }));
+                }
+
+                setTime() {
+                    if(this.state.seconds>10){
+                        this.state.seconds=0;
+                        this.state.minutes= this.state.minutes +1;
+                    }
+                    if(this.state.minutes>10){
+                        this.state.minutes=0
+                        this.state.hours= this.state.hours +1;
+                    }
+                }
+
+                componentDidMount() {
+                    this.interval = setInterval(() => this.tick(), 1000);
+                }
+
+                componentWillUnmount() {
+                    clearInterval(this.interval);
+                }
+
+                render() {
+                    return React.createElement(
+                    'div',
+                    null,
+                    this.state.hours,':',this.state.minutes,':',this.state.seconds,
+                    );
+                }
+                }
+
+        ReactDOM.render(React.createElement(Timer2, null), document.getElementById('timer-example2'));
+    
+
         class TodoApp extends React.Component {
         constructor(props) {
             super(props);
             this.state = { items: [], text: '' };
             this.handleChange = this.handleChange.bind(this);
             this.handleSubmit = this.handleSubmit.bind(this);
+            this.letter='A';
         }
 
         render() {
@@ -118,8 +168,9 @@
                 React.createElement(
                 "button",
                 null,
-                "Add #",
-                this.state.items.length + 1
+                "Add Task ",
+                String.fromCharCode('A'.charCodeAt() + this.state.items.length)
+                
                 )
             )
             );
@@ -148,11 +199,11 @@
         class TodoList extends React.Component {
         render() {
             return React.createElement(
-            "ul",
-            null,
+            "ol",
+            {type:"A"},
             this.props.items.map(item => React.createElement(
                 "li",
-                { key: item.id },
+                { key: item.id},
                 item.text
             ))
             );  
